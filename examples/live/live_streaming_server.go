@@ -91,11 +91,11 @@ func live(w http.ResponseWriter, r *http.Request) {
 		if len(message) > 0 {
 			log.Printf(" bytes size received from client: %d", len(message))
 		}
-		var sendMessage genai.LiveClientMessage
+		var sendMessage genai.LiveRealtimeInput
 		if err := json.Unmarshal(message, &sendMessage); err != nil {
 			log.Fatal("unmarshal message error ", string(message), err)
 		}
-		session.Send(&sendMessage)
+		session.SendRealtimeInput(sendMessage)
 	}
 }
 
