@@ -241,7 +241,7 @@ func TestLiveConnect(t *testing.T) {
 				// Construct a test message
 
 				// Test sending the message
-				err = session.SendClientContent(LiveClientContentInput{turns: Text("client test message")})
+				err = session.SendClientContent(LiveClientContentInput{Turns: Text("client test message")})
 				if err != nil {
 					t.Errorf("Send failed : %v", err)
 				}

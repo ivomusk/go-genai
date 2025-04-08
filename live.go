@@ -145,7 +145,7 @@ type LiveClientContentInput struct {
 	// For single-turn queries, this is a single instance. For multi-turn
 	// queries, this is a repeated field that contains conversation history and
 	// latest request.
-	turns []*Content
+	Turns []*Content `json:"turns,omitempty"`
 	// TurnComplete is default to true, indicating that the server content generation should
 	// start with the currently accumulated prompt. If set to false, the server will await
 	// additional messages, accumulating the prompt, and start generation until received a
@@ -161,14 +161,14 @@ func (s *Session) SendClientContent(input LiveClientContentInput) error {
 		input.TurnComplete = Ptr(true)
 	}
 	clientMessage := &LiveClientMessage{
-		ClientContent: &LiveClientContent{Turns: input.turns, TurnComplete: *input.TurnComplete},
+		ClientContent: &LiveClientContent{Turns: input.Turns, TurnComplete: *input.TurnComplete},
 	}
 	return s.send(clientMessage)
 }
 
 // LiveRealtimeInput is the input for [SendRealtimeInput].
 type LiveRealtimeInput struct {
-	media *Blob
+	Media *Blob `json:"media,omitempty"`
 }
 
 // SendRealtimeInput transmits a [LiveClientRealtimeInput] over the established connection.
@@ -176,14 +176,15 @@ type LiveRealtimeInput struct {
 // The live module is experimental.
 func (s *Session) SendRealtimeInput(input LiveRealtimeInput) error {
 	clientMessage := &LiveClientMessage{
-		RealtimeInput: &LiveClientRealtimeInput{MediaChunks: []*Blob{input.media}},
+		RealtimeInput: &LiveClientRealtimeInput{MediaChunks: []*Blob{input.Media}},
 	}
 	return s.send(clientMessage)
 }
 
 // LiveToolResponseInput is the input for [SendToolResponse].
 type LiveToolResponseInput struct {
-	FunctionResponses []*FunctionResponse
+	// The response to the function calls.
+	FunctionResponses []*FunctionResponse `json:"functionResponses,omitempty"`
 }
 
 // SendToolResponse transmits a [LiveClientToolResponse] over the established connection.
