@@ -23,6 +23,25 @@ import (
 	"net/http"
 )
 
+func blobToMldev(ac *apiClient, fromObject map[string]any, parentObject map[string]any) (toObject map[string]any, err error) {
+	toObject = make(map[string]any)
+	if getValueByPath(fromObject, []string{"displayName"}) != nil {
+		return nil, fmt.Errorf("displayName parameter is not supported in Gemini API")
+	}
+
+	fromData := getValueByPath(fromObject, []string{"data"})
+	if fromData != nil {
+		setValueByPath(toObject, []string{"data"}, fromData)
+	}
+
+	fromMimeType := getValueByPath(fromObject, []string{"mimeType"})
+	if fromMimeType != nil {
+		setValueByPath(toObject, []string{"mimeType"}, fromMimeType)
+	}
+
+	return toObject, nil
+}
+
 func partToMldev(ac *apiClient, fromObject map[string]any, parentObject map[string]any) (toObject map[string]any, err error) {
 	toObject = make(map[string]any)
 	if getValueByPath(fromObject, []string{"videoMetadata"}) != nil {
@@ -32,6 +51,16 @@ func partToMldev(ac *apiClient, fromObject map[string]any, parentObject map[stri
 	fromThought := getValueByPath(fromObject, []string{"thought"})
 	if fromThought != nil {
 		setValueByPath(toObject, []string{"thought"}, fromThought)
+	}
+
+	fromInlineData := getValueByPath(fromObject, []string{"inlineData"})
+	if fromInlineData != nil {
+		fromInlineData, err = blobToMldev(ac, fromInlineData.(map[string]any), toObject)
+		if err != nil {
+			return nil, err
+		}
+
+		setValueByPath(toObject, []string{"inlineData"}, fromInlineData)
 	}
 
 	fromCodeExecutionResult := getValueByPath(fromObject, []string{"codeExecutionResult"})
@@ -57,11 +86,6 @@ func partToMldev(ac *apiClient, fromObject map[string]any, parentObject map[stri
 	fromFunctionResponse := getValueByPath(fromObject, []string{"functionResponse"})
 	if fromFunctionResponse != nil {
 		setValueByPath(toObject, []string{"functionResponse"}, fromFunctionResponse)
-	}
-
-	fromInlineData := getValueByPath(fromObject, []string{"inlineData"})
-	if fromInlineData != nil {
-		setValueByPath(toObject, []string{"inlineData"}, fromInlineData)
 	}
 
 	fromText := getValueByPath(fromObject, []string{"text"})
@@ -1103,6 +1127,27 @@ func generateVideosParametersToMldev(ac *apiClient, fromObject map[string]any, p
 	return toObject, nil
 }
 
+func blobToVertex(ac *apiClient, fromObject map[string]any, parentObject map[string]any) (toObject map[string]any, err error) {
+	toObject = make(map[string]any)
+
+	fromDisplayName := getValueByPath(fromObject, []string{"displayName"})
+	if fromDisplayName != nil {
+		setValueByPath(toObject, []string{"displayName"}, fromDisplayName)
+	}
+
+	fromData := getValueByPath(fromObject, []string{"data"})
+	if fromData != nil {
+		setValueByPath(toObject, []string{"data"}, fromData)
+	}
+
+	fromMimeType := getValueByPath(fromObject, []string{"mimeType"})
+	if fromMimeType != nil {
+		setValueByPath(toObject, []string{"mimeType"}, fromMimeType)
+	}
+
+	return toObject, nil
+}
+
 func partToVertex(ac *apiClient, fromObject map[string]any, parentObject map[string]any) (toObject map[string]any, err error) {
 	toObject = make(map[string]any)
 
@@ -1114,6 +1159,16 @@ func partToVertex(ac *apiClient, fromObject map[string]any, parentObject map[str
 	fromThought := getValueByPath(fromObject, []string{"thought"})
 	if fromThought != nil {
 		setValueByPath(toObject, []string{"thought"}, fromThought)
+	}
+
+	fromInlineData := getValueByPath(fromObject, []string{"inlineData"})
+	if fromInlineData != nil {
+		fromInlineData, err = blobToVertex(ac, fromInlineData.(map[string]any), toObject)
+		if err != nil {
+			return nil, err
+		}
+
+		setValueByPath(toObject, []string{"inlineData"}, fromInlineData)
 	}
 
 	fromCodeExecutionResult := getValueByPath(fromObject, []string{"codeExecutionResult"})
@@ -1139,11 +1194,6 @@ func partToVertex(ac *apiClient, fromObject map[string]any, parentObject map[str
 	fromFunctionResponse := getValueByPath(fromObject, []string{"functionResponse"})
 	if fromFunctionResponse != nil {
 		setValueByPath(toObject, []string{"functionResponse"}, fromFunctionResponse)
-	}
-
-	fromInlineData := getValueByPath(fromObject, []string{"inlineData"})
-	if fromInlineData != nil {
-		setValueByPath(toObject, []string{"inlineData"}, fromInlineData)
 	}
 
 	fromText := getValueByPath(fromObject, []string{"text"})
@@ -2635,12 +2685,38 @@ func generateVideosParametersToVertex(ac *apiClient, fromObject map[string]any, 
 	return toObject, nil
 }
 
+func blobFromMldev(ac *apiClient, fromObject map[string]any, parentObject map[string]any) (toObject map[string]any, err error) {
+	toObject = make(map[string]any)
+
+	fromData := getValueByPath(fromObject, []string{"data"})
+	if fromData != nil {
+		setValueByPath(toObject, []string{"data"}, fromData)
+	}
+
+	fromMimeType := getValueByPath(fromObject, []string{"mimeType"})
+	if fromMimeType != nil {
+		setValueByPath(toObject, []string{"mimeType"}, fromMimeType)
+	}
+
+	return toObject, nil
+}
+
 func partFromMldev(ac *apiClient, fromObject map[string]any, parentObject map[string]any) (toObject map[string]any, err error) {
 	toObject = make(map[string]any)
 
 	fromThought := getValueByPath(fromObject, []string{"thought"})
 	if fromThought != nil {
 		setValueByPath(toObject, []string{"thought"}, fromThought)
+	}
+
+	fromInlineData := getValueByPath(fromObject, []string{"inlineData"})
+	if fromInlineData != nil {
+		fromInlineData, err = blobFromMldev(ac, fromInlineData.(map[string]any), toObject)
+		if err != nil {
+			return nil, err
+		}
+
+		setValueByPath(toObject, []string{"inlineData"}, fromInlineData)
 	}
 
 	fromCodeExecutionResult := getValueByPath(fromObject, []string{"codeExecutionResult"})
@@ -2666,11 +2742,6 @@ func partFromMldev(ac *apiClient, fromObject map[string]any, parentObject map[st
 	fromFunctionResponse := getValueByPath(fromObject, []string{"functionResponse"})
 	if fromFunctionResponse != nil {
 		setValueByPath(toObject, []string{"functionResponse"}, fromFunctionResponse)
-	}
-
-	fromInlineData := getValueByPath(fromObject, []string{"inlineData"})
-	if fromInlineData != nil {
-		setValueByPath(toObject, []string{"inlineData"}, fromInlineData)
 	}
 
 	fromText := getValueByPath(fromObject, []string{"text"})
@@ -3183,6 +3254,27 @@ func generateVideosOperationFromMldev(ac *apiClient, fromObject map[string]any, 
 	return toObject, nil
 }
 
+func blobFromVertex(ac *apiClient, fromObject map[string]any, parentObject map[string]any) (toObject map[string]any, err error) {
+	toObject = make(map[string]any)
+
+	fromDisplayName := getValueByPath(fromObject, []string{"displayName"})
+	if fromDisplayName != nil {
+		setValueByPath(toObject, []string{"displayName"}, fromDisplayName)
+	}
+
+	fromData := getValueByPath(fromObject, []string{"data"})
+	if fromData != nil {
+		setValueByPath(toObject, []string{"data"}, fromData)
+	}
+
+	fromMimeType := getValueByPath(fromObject, []string{"mimeType"})
+	if fromMimeType != nil {
+		setValueByPath(toObject, []string{"mimeType"}, fromMimeType)
+	}
+
+	return toObject, nil
+}
+
 func partFromVertex(ac *apiClient, fromObject map[string]any, parentObject map[string]any) (toObject map[string]any, err error) {
 	toObject = make(map[string]any)
 
@@ -3194,6 +3286,16 @@ func partFromVertex(ac *apiClient, fromObject map[string]any, parentObject map[s
 	fromThought := getValueByPath(fromObject, []string{"thought"})
 	if fromThought != nil {
 		setValueByPath(toObject, []string{"thought"}, fromThought)
+	}
+
+	fromInlineData := getValueByPath(fromObject, []string{"inlineData"})
+	if fromInlineData != nil {
+		fromInlineData, err = blobFromVertex(ac, fromInlineData.(map[string]any), toObject)
+		if err != nil {
+			return nil, err
+		}
+
+		setValueByPath(toObject, []string{"inlineData"}, fromInlineData)
 	}
 
 	fromCodeExecutionResult := getValueByPath(fromObject, []string{"codeExecutionResult"})
@@ -3219,11 +3321,6 @@ func partFromVertex(ac *apiClient, fromObject map[string]any, parentObject map[s
 	fromFunctionResponse := getValueByPath(fromObject, []string{"functionResponse"})
 	if fromFunctionResponse != nil {
 		setValueByPath(toObject, []string{"functionResponse"}, fromFunctionResponse)
-	}
-
-	fromInlineData := getValueByPath(fromObject, []string{"inlineData"})
-	if fromInlineData != nil {
-		setValueByPath(toObject, []string{"inlineData"}, fromInlineData)
 	}
 
 	fromText := getValueByPath(fromObject, []string{"text"})
